@@ -9,7 +9,8 @@ module IntacctRuby
       post_request ||= Net::HTTP::Post.new(uri.request_uri)
 
       post_request['Content-Type'] = 'x-intacct-xml-request'
-      post_request.body = request_object.to_xml
+      payload = request_object.to_xml
+      post_request.body = payload
 
       https_request(post_request, uri)
     end
