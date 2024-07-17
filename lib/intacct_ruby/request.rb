@@ -46,7 +46,7 @@ module IntacctRuby
           control_block
           operation_block
         end
-      end
+                  end
     end
 
     def send(opts = {})

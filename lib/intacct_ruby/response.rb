@@ -13,6 +13,10 @@ module IntacctRuby
   class Response
     attr_reader :response_body
 
+    #delegate_missing_to :response_body
+
+    delegate :to_xml, to: :response_body
+
     def initialize(http_response)
       @response_body = Nokogiri::XML(http_response.body)
 
@@ -22,6 +26,22 @@ module IntacctRuby
       # in case the response is a success, but one of the included functions
       # failed and the transaction was rolled back
       raise_function_errors unless transaction_successful?
+    end
+
+    def to_json
+      @to_json ||= to_hash.to_json
+    end
+
+    def to_hash
+      @to_hash ||= Hash.from_xml(to_xml)
+    end
+
+    def data
+      @data ||= JSON.parse(to_json, object_class: OpenStruct)
+    end
+
+    def result
+      data&.response&.operation&.result
     end
 
     def function_errors
