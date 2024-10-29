@@ -118,10 +118,14 @@ module IntacctRuby
 
     def authentication_block
       @request.authentication do
-        @request.login do
-          @request.userid    @opts[:userid]
-          @request.companyid @opts[:companyid]
-          @request.password  @opts[:user_password]
+        if @opts[:sessionid].present?
+          @request.sessionid @opts[:sessionid]
+        else
+          @request.login do
+            @request.userid    @opts[:userid]
+            @request.companyid @opts[:companyid]
+            @request.password  @opts[:user_password]
+          end
         end
       end
     end
