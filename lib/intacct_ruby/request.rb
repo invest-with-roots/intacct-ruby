@@ -70,6 +70,8 @@ module IntacctRuby
 
       # object_type must be the first argument in arguments
       @functions << Function.new(method_name,
+                                 controlid: opts.delete(:controlid),
+                                 attributes: opts.delete(:attributes) || {},
                                  object_type: opts.delete(:object_type),
                                  parameters: opts.delete(:parameters) || {}, **opts)
     end

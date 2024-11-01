@@ -13,15 +13,18 @@ module IntacctRuby
       create
       update
       delete
+      delete_customer
       getAPISession
     ).freeze
 
     CU_TYPES = %w(create update).freeze
 
-    def initialize(function_type, object_type: nil, parameters: )
+    def initialize(function_type, attributes: nil, controlid: nil, object_type: nil, parameters: )
       @function_type = function_type.to_s
+      @function_attributes = attributes
       @object_type = object_type.to_s
       @parameters = parameters
+      @controlid = controlid
 
       validate_type!
     end
@@ -30,7 +33,7 @@ module IntacctRuby
       xml = Builder::XmlMarkup.new
 
       xml.function controlid: controlid do
-        xml.tag!(@function_type) do
+        xml.tag!(@function_type, @function_attributes) do
           if CU_TYPES.include?(@function_type)
             xml.tag!(@object_type) do
               xml << parameter_xml(@parameters)
@@ -51,7 +54,7 @@ module IntacctRuby
     end
 
     def controlid
-      "#{@function_type}-#{@object_type}-#{timestamp}"
+      @controlid ||= "#{@function_type}-#{@object_type}-#{timestamp}-#{SecureRandom.uuid}"
     end
 
     def parameter_xml(parameters_to_convert)
