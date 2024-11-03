@@ -14,6 +14,7 @@ module IntacctRuby
       update
       delete
       delete_customer
+      lookup
       getAPISession
     ).freeze
 
