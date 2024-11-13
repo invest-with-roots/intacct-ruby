@@ -56,8 +56,7 @@ module IntacctRuby
     end
 
     def raise_function_errors
-      raise Exceptions::FunctionFailureException,
-            function_errors.join("\n")
+      raise Exceptions::FunctionFailureException.new(function_errors.join("\n"), source: self)
     end
   end
 end
